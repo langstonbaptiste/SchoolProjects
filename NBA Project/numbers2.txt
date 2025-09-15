@@ -1,0 +1,14 @@
+1 - Joel Embiid: 34.69230769230769
+2 - Giannis Antetokounmpo: 30.438356164383563
+3 - Shai Gilgeous-Alexander: 30.053333333333335
+4 - Jalen Brunson: 28.727272727272727
+5 - Kevin Durant: 27.093333333333334
+6 - Jayson Tatum: 26.85135135135135
+7 - Stephen Curry: 26.43243243243243
+8 - Tyrese Maxey: 25.942857142857143
+9 - Anthony Edwards: 25.936708860759495
+10 - Trae Young: 25.72222222222222
+11 - LeBron James: 25.661971830985916
+12 - Victor Wembanyama: 21.43661971830986
+13 - James Harden: 16.555555555555557
+14 - Wendell Carter Jr.: 10.963636363636363

@@ -1,0 +1,16 @@
+2023-2024 NBA Season Stats - Assists To Points
+----------------------------------------------
+1. James Harden              0.52
+2. Trae Young                0.42
+3. LeBron James              0.32
+4. Tyrese Maxey              0.24
+5. Jalen Brunson             0.23
+6. Giannis Antetokounmpo     0.21
+7. Shai Gilgeous-Alexander   0.21
+8. Anthony Edwards           0.2
+9. Stephen Curry             0.19
+10. Kevin Durant             0.19
+11. Jayson Tatum             0.18
+12. Victor Wembanyama        0.18
+13. Joel Embiid              0.16
+14. Wendell Carter Jr.       0.16
