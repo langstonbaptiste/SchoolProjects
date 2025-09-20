@@ -23,7 +23,7 @@ cleanedData = []
 for line in text[1:]:
     line = line.strip().split(",")
     for i in range(4, len(line)):
-        line[i] = float(line[i]) 
+        line[i] = float(line[i])
     cleanedData.append(line)
 
 # Clean full stats
@@ -31,7 +31,7 @@ fullCleanedData = []
 for line in fullText[1:]:
     line = line.strip().split(",")
     for i in range(5, len(line)):
-        line[i] = 0 if line[i] == "-" else float(line[i]) 
+        line[i] = 0 if line[i] == "-" else float(line[i])
     fullCleanedData.append(line)
 
 # Game logs by player
@@ -64,59 +64,36 @@ for line in cleanedData:
         playerMap[opp] = []
     playerMap[opp].append(line)
 
-
-# Indexes reference
-'''
-0 - playerName
-1 - gamesPlayed
-2 - wins
-3 - losses
-4 - homeWins
-5 - homeLosses
-6 - awayWins
-7 - awayLosses
-8 - totalMinutes
-9 - totalPoints
-10 - totalPointsInWins
-11 - totalPointsInLosses
-12 - totalHomePoints
-13 - totalAwayPoints
-14 - minsPerGame
-15 - PPG
-16 - PPM
-17 - win%
-18 - PPGinWins
-19 - PPGinLosses
-20 - AssistsToPoints
-'''
-
+# Human-readable stat descriptions
 statDescriptions = {
-    1 : "Games Played",
-    2 : "Total Wins",
-    3 : "Total Losses",
-    4 : "Home Wins",
-    5 : "Home Losses",
-    6 : "Away Wins",
-    7 : "Away Losses",
-    8 : "Total Minutes",
-    9 : "Total Points",
-    10 : "Total Points in Wins",
-    11 : "Total Points in Losses",
-    12 : "Total Home Points",
-    13 : "Total Away Points",
-    14 : "Minutes Per Game",
-    15 : "Points Per Game",
-    16 : "Points Per Minute",
-    17 : "Win Percentage",
-    18 : "Points Per Game in Wins",
-    19 : "Points Per Game in Losses",
-    20 : "Assists To Points"
+    "GamesPlayed": "Games Played",
+    "Wins": "Total Wins",
+    "Losses": "Total Losses",
+    "HomeWins": "Home Wins",
+    "HomeLosses": "Home Losses",
+    "AwayWins": "Away Wins",
+    "AwayLosses": "Away Losses",
+    "TotalMinutes": "Total Minutes",
+    "TotalPoints": "Total Points",
+    "TotalPointsInWins": "Total Points in Wins",
+    "TotalPointsInLosses": "Total Points in Losses",
+    "TotalHomePoints": "Total Home Points",
+    "TotalAwayPoints": "Total Away Points",
+    "MinutesPerGame": "Minutes Per Game",
+    "PPG": "Points Per Game",
+    "PPM": "Points Per Minute",
+    "Win%": "Win Percentage",
+    "PPGinWins": "Points Per Game in Wins",
+    "PPGinLosses": "Points Per Game in Losses",
+    "Assists": "Total Assists",
+    "AssistsPerGame": "Assists Per Game",
+    "AssistsToPoints": "Assists to Points Ratio"
 }
 
 def getPlayerStats(playerName):
     games = gameLogs[playerName]
     fullGames = fullGameLogs[playerName]
-    
+
     gamesPlayed = len(games)
     wins = 0
     losses = 0
@@ -131,7 +108,7 @@ def getPlayerStats(playerName):
     totalHomePoints = 0
     totalAwayPoints = 0
     totalAssists = 0
- 
+
     for i in range(len(games)):
         game  = games[i]
         fullGame  = fullGames[i]
@@ -156,7 +133,7 @@ def getPlayerStats(playerName):
         points = game[5]
         totalPoints += points
 
-        # Check index for assists (make sure COLUMN_HEADERS[19] == "AST")
+        # Assists are in COLUMN_HEADERS[19] of full stats
         totalAssists += fullGame[19]
 
         if outcome == "W":
@@ -167,23 +144,39 @@ def getPlayerStats(playerName):
             totalHomePoints += points
         else:
             totalAwayPoints += points
-   
+
     minsPerGame = totalMinutes / gamesPlayed if gamesPlayed > 0 else 0
     ppg = totalPoints / gamesPlayed if gamesPlayed > 0 else 0
     ppm = totalPoints / totalMinutes if totalMinutes > 0 else 0
-    winPercentage = wins / gamesPlayed * 100 if gamesPlayed > 0 else 0
+    winPercentage = wins / gamesPlayed if gamesPlayed > 0 else 0
     ppgInWins = totalPointsInWins / wins if wins > 0 else 0
     ppgInLosses = totalPointsInLosses / losses if losses > 0 else 0
     assistsToPoints = totalAssists / totalPoints if totalPoints > 0 else 0
 
-    return [
-        playerName, gamesPlayed, wins, losses, homeWins, homeLosses,
-        awayWins, awayLosses, totalMinutes, totalPoints, totalPointsInWins,
-        totalPointsInLosses, totalHomePoints, totalAwayPoints,
-        minsPerGame, ppg, ppm, winPercentage,
-        ppgInWins, ppgInLosses, assistsToPoints
-    ]
-
+    return {
+        "GamesPlayed": gamesPlayed,
+        "Wins": wins,
+        "Losses": losses,
+        "HomeWins": homeWins,
+        "HomeLosses": homeLosses,
+        "AwayWins": awayWins,
+        "AwayLosses": awayLosses,
+        "TotalMinutes": totalMinutes,
+        "TotalPoints": totalPoints,
+        "TotalPointsInWins": totalPointsInWins,
+        "TotalPointsInLosses": totalPointsInLosses,
+        "TotalHomePoints": totalHomePoints,
+        "TotalAwayPoints": totalAwayPoints,
+        "MinutesPerGame": minsPerGame,
+        "PPG": ppg,
+        "PPM": ppm,
+        "Win%": winPercentage,
+        "PPGinWins": ppgInWins,
+        "PPGinLosses": ppgInLosses,
+        "Assists": totalAssists,
+        "AssistsPerGame": totalAssists / gamesPlayed if gamesPlayed > 0 else 0,
+        "AssistsToPoints": assistsToPoints
+    }
 
 def pointsPerMonth(month):
     points = 0
@@ -193,7 +186,6 @@ def pointsPerMonth(month):
         if int(splitDate[0]) == month:
             points += int(line[5])
     return points
-
 
 def printPPGperOpponent(playerName):
     logs = gameLogsByOpponent[playerName]
@@ -205,7 +197,6 @@ def printPPGperOpponent(playerName):
         totalPoints = sum(game[5] for game in games)
         avgPoints = totalPoints / totalGames if totalGames > 0 else 0
         print(team, ":", avgPoints)
-
 
 def printPPGperBreakLength(playerName):
     logs = gameLogs[playerName]
@@ -224,17 +215,17 @@ def printPPGperBreakLength(playerName):
         else:
             day_diff = (date_object - last_date_object).days - 1
             last_date_object = date_object
-        
+
         if day_diff == 0:
             index = 0
         elif day_diff <= 2:
             index = 1
         else:
             index = 2
-        
+
         points[index] += game[5]
         games[index] += 1
-    
+
     avg = [
         points[0] / games[0] if games[0] > 0 else 0,
         points[1] / games[1] if games[1] > 0 else 0,
@@ -247,31 +238,72 @@ def printPPGperBreakLength(playerName):
     print("3+ rest days: " + str(avg[2]))
     return avg
 
-
 def makeAllPlayerStats():
     stats = []
     for player in gameLogs:
         stats.append(getPlayerStats(player))
     return stats
 
-
-def writePlayerStats(fileName, index):
+def writePlayerStats(fileName, statKey):
     stats = makeAllPlayerStats()
-    stats.sort(key=lambda x: x[index], reverse=True)
-  
+
+    n = len(stats)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if stats[j][statKey] < stats[j+1][statKey]:
+                stats[j], stats[j+1] = stats[j+1], stats[j]
+
     string = ""
-    title = "2023-2024 NBA Season Stats - " + statDescriptions[index]
+    title = "2023-2024 NBA Season Stats - " + statDescriptions.get(statKey, statKey)
     string += title + "\n"
     string += "-" * len(title) + "\n"
-    for i in range(len(stats)):
-        newString = str(i+1) + ". " +  str(stats[i][0]) 
-        string += newString + " " * (29 - len(newString)) + str(round(stats[i][index], 2))
-        string += "\n"
-    
-    with open(fileName, "w") as outputFile:
-        outputFile.write(string.strip())
 
+    players = list(gameLogs.keys())
+    for i in range(len(stats)):
+        newString = str(i+1) + ". " + players[i]
+        string += newString + " " * (29 - len(newString)) + str(round(stats[i][statKey], 2))
+        string += "\n"
+
+    with open(fileName, "w") as f:
+        f.write(string)
+
+def computeMVP():
+    players = list(gameLogs.keys())
+    stats = [getPlayerStats(p) for p in players]
+
+    # choose which stats to include in MVP calculation
+    mvpStats = ["PPG", "PPM", "Win%", "AssistsPerGame",
+                "PPGinWins", "PPGinLosses", "MinutesPerGame", "AssistsToPoints"]
+
+    def normalize(lst):
+        lo, hi = min(lst), max(lst)
+        return [(x - lo) / (hi - lo) if hi > lo else 0 for x in lst]
+
+
+    normalized = {}
+    for stat in mvpStats:
+        values = [s[stat] for s in stats]
+        normalized[stat] = normalize(values)
+
+
+    scores = []
+    for i, player in enumerate(players):
+        score = sum(normalized[stat][i] for stat in mvpStats) / len(mvpStats)
+        scores.append([player, score])
+
+    n = len(scores)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if scores[j][1] < scores[j+1][1]:
+                scores[j], scores[j+1] = scores[j+1], scores[j]
+
+
+    print("\n🏀 MVP Leaderboard (Comprehensive):")
+    for i in range(min(10, len(scores))):
+        player, score = scores[i]
+        print(str(i+1) + ". " + player + " : " + str(round(score, 3)))
 
 # Example run
-writePlayerStats("sorted_nba_stats.txt", 20)
+writePlayerStats("sorted_nba_stats.txt", "PPG")
+computeMVP()
 print("compiles")
